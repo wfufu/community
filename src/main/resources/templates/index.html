@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>码匠社区</title>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8"/>
@@ -26,16 +27,24 @@
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
+
+            <!--如果已经登录显示“我” 否则显示“登录”-->
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="https://github.com/login/oauth/authorize?client_id=eb5deaf097c8114b66fd&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a></li>
-                <li class="dropdown">
+                <li class="dropdown" th:if="${session.user !=null}" >
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">我<span class="caret"></span></a>
+                    aria-expanded="false" >
+                        <!--th:text="${session.user.getName()}"  使显示用户的名字 而不是“我”-->
+                        <!--下面这这句写在这里，下标箭头不会消失-->
+                        <span th:text="${session.user.getName()}"></span>
+                        <span  class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">消息中心</a></li>
                         <li><a href="#">个人资料</a></li>
                         <li><a href="#">退出登录</a></li>
                     </ul>
+                </li>
+                <li th:if="${session.user == null}">
+                    <a href="https://github.com/login/oauth/authorize?client_id=eb5deaf097c8114b66fd&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
                 </li>
             </ul>
         </div><!-- /.navbar-collapse -->
