@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 /**
@@ -46,7 +46,9 @@ public class AuthorizeController {
                            @RequestParam(name = "state") String state,
                            //session从HttpServletRequest request 中获得
                            //spring会自动把上下文中的request放在这里面
-                           HttpServletRequest request) {
+//                           HttpServletRequest request,
+//                           通过response去写入cookie
+                           HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(clientSecret);
@@ -61,16 +63,21 @@ public class AuthorizeController {
             //登录成功，写cookie 和session
 
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            //用token代替之前的session
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            //插入数据库的过程就相当于写入session，所以不用再写入session了，相当于用数据库的存储代替了session的写入
             userMapper.insert(user);
+            //写入cookie  通过response去写入cookie
+            response.addCookie(new Cookie("token",token));
 
             //把user对象放到session里面
             //相当于在银行当中账户已经写入成功了
-            request.getSession().setAttribute("user", githubUser);
+//            request.getSession().setAttribute("user", githubUser);
             //把地址后面的后缀去掉  重定向到index页面
             //redirect返回的是路径 所以写“/” 而不是 “index”
             return "redirect:/";
