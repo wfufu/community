@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @Author Fu Yonghui
@@ -14,12 +15,15 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
     //mybatis做的事情就是当执行这条语句时，会把object里面的user下面的name等属性自动填充到#{}里面自动替换掉
-    @Insert("insert into community.user(name,account_id,token,gmt_create,gmt_modified) values (#{name},#{accountId},#{token},#{gmtCreate},#{gmtModified})")
+    @Insert("insert into community.user(name,account_id,token,gmt_create,gmt_modified,avatar_url) values (#{name},#{accountId},#{token},#{gmtCreate},#{gmtModified},#{avatarUrl})")
     //public reluctant可以去掉
     void insert(User user);
 
     //#{}代表在没有batis编译的时候会把形参里面的token 放到这里面去
     //如果是类的话会自动放 如果不是的需要加一个@Param（）注解
-    @Select("select * from user where token = #{token}")
-    User fianByToken(@Param("token") String token);
+    @Select("select * from community.user where token = #{token}")
+    User findByToken(@Param("token") String token);
+
+    @Select("select * from community.user where id = #{id}")
+    User findById(@RequestParam("id") Integer id);
 }

@@ -70,6 +70,7 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUser.getAvatar_url());
             //插入数据库的过程就相当于写入session，所以不用再写入session了，相当于用数据库的存储代替了session的写入
             userMapper.insert(user);
             //写入cookie  通过response去写入cookie

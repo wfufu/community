@@ -39,9 +39,9 @@ public class PublishController {
     @PostMapping("/publish")
     public String doPublish(
             //接收参数
-            @RequestParam(value = "title" ,required = false) String title,
-            @RequestParam(value = "description",required = false) String description,
-            @RequestParam(value = "tag",required = false) String tag,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "tag", required = false) String tag,
             HttpServletRequest request,
             Model model) {
 
@@ -64,16 +64,18 @@ public class PublishController {
 
         User user = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("token")) {
-                String token = cookie.getValue();
-                user = userMapper.fianByToken(token);
-                if (user != null) {
-                    request.getSession().setAttribute("user", user);
+        //判断cookie是否为空。。。
+        if (cookies != null && cookies.length != 0)
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("token")) {
+                    String token = cookie.getValue();
+                    user = userMapper.findByToken(token);
+                    if (user != null) {
+                        request.getSession().setAttribute("user", user);
+                    }
+                    break;
                 }
-                break;
             }
-        }
 
         if (user == null) {
             model.addAttribute("error", "用户未登录！");
