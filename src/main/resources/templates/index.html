@@ -30,6 +30,9 @@
 
             <!--如果已经登录显示“我” 否则显示“登录”-->
             <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user !=null}">
+                    <a href="/publish">发布</a>
+                </li>
                 <li class="dropdown" th:if="${session.user !=null}" >
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                     aria-expanded="false" >

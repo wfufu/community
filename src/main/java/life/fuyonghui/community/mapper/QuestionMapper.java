@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface QuestionMapper {
 
     //其他值有默认值0  不用写
-    @Insert("insert into community.question(title,description,gmt_create,gmt_modified,creator,tag) values(#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag}")
+    @Insert("insert into community.question(title,description,gmt_create,gmt_modified,creator,tag) values(#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})")
     void create(Question question);
 }
